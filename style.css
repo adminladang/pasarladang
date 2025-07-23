@@ -1,0 +1,267 @@
+/* Umum */
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Container dengan border kiri dan kanan */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  border-left: 6px solid #2e7d32;
+  border-right: 6px solid #2e7d32;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+/* Header Hero */
+.hero {
+  background: url('img/banner.jpg') center/cover no-repeat;
+  color: white;
+  padding: 100px 20px;
+  text-align: center;
+  position: relative;
+}
+
+.hero .overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 60px 20px;
+}
+
+  .hero h1 {
+  color: white;
+  font-size: rem;
+  font-weight: bold;
+
+}
+
+/* Navigasi */
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+nav ul li {
+  position: relative;
+}
+
+nav a {
+  padding: 10px 15px;
+  background-color: #2e7d32;
+  color: white;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+nav a:hover {
+  background-color: #256029;
+}
+
+/* Submenu */
+.submenu {
+  display: none;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  background: white;
+  padding: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  border-radius: 4px;
+  z-index: 999;
+}
+
+.dropdown:hover .submenu {
+  display: block;
+}
+
+.submenu a {
+  color: #2e7d32;
+  padding: 5px 10px;
+  display: block;
+}
+
+/* Seksyen */
+main section {
+  padding: 60px 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.bg-light {
+  background-color: #f1f8f2;
+}
+
+/* Tajuk */
+h1, h2, h3 {
+  color: #2e7d32;
+  margin-bottom: 20px;
+}
+
+p {
+  margin-bottom: 20px;
+}
+
+/* Grid Kad */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card img {
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+/* Butang Daftar */
+.btn-daftar {
+  display: inline-block;
+  background-color: #2e7d32;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin: 1rem 0;
+}
+
+.btn-daftar:hover {
+  background-color: #256029;
+}
+
+/* Borang Hubungi */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 600px;
+}
+
+form input,
+form textarea {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+form button {
+  background-color: #2e7d32;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+form button:hover {
+  background-color: #256029;
+}
+
+/* Scroll Berita Ke Bawah */
+.berita-scroll {
+  height: 150px;
+  overflow: hidden;
+  position: relative;
+  background-color: #f1f8f2;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.berita-scroll ul {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  animation: scroll-vertical 12s linear infinite;
+}
+
+.berita-scroll li {
+  padding: 8px 0;
+}
+
+.berita-scroll a {
+  color: #2e7d32;
+  text-decoration: none;
+}
+
+.berita-scroll a:hover {
+  text-decoration: underline;
+}
+
+@keyframes scroll-vertical {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+/* Footer */
+footer {
+  background-color: #2e7d32;
+  color: white;
+  text-align: center;
+  padding: 20px 10px;
+  font-size: 0.9rem;
+}
+
+/* Responsif */
+@media (max-width: 600px) {
+  .hero {
+    padding: 60px 10px;
+  }
+
+  nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  iframe {
+    width: 100% !important;
+    height: auto;
+  }
+
+  .container {
+    border-left: none;
+    border-right: none;
+    padding: 0 10px;
+  }
+}

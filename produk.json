@@ -1,0 +1,44 @@
+[
+  {
+    "nama": "Kangkung",
+    "harga": 2,
+    "unit": "ikat",
+    "gambar": "img/kangkung.jpg"
+  },
+  {
+    "nama": "Ayam Kampung",
+    "harga": 25,
+    "unit": "ekor",
+    "gambar": "img/ayam.jpg"
+  },
+  {
+    "nama": "Cili Merah",
+    "harga": 5,
+    "unit": "250g",
+    "gambar": "img/cili.jpg"
+  },
+  {
+    "nama": "Tomato",
+    "harga": 4,
+    "unit": "500g",
+    "gambar": "img/tomato.jpg"
+  },
+  {
+    "nama": "Jagung Manis",
+    "harga": 3,
+    "unit": "tongkol",
+    "gambar": "img/jagung.jpg"
+  },
+  {
+    "nama": "Telur Kampung",
+    "harga": 10,
+    "unit": "10 biji",
+    "gambar": "img/telur.jpg"
+  },
+  {
+    "nama": "Bayam Merah",
+    "harga": 2.5,
+    "unit": "ikat",
+    "gambar": "img/bayam merah.jpg"
+  }
+]

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Admin PasarLadang</title>
+  <link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+  <div id="login-section">
+    <h2>Log Masuk Admin</h2>
+    <form id="login-form" method="POST">
+      <input type="text" id="admin-username" placeholder="Nama Pengguna" required>
+      <input type="password" id="admin-password" placeholder="Katalaluan" required>
+      <button type="submit">Log Masuk</button>
+    </form>
+  </div>
+
+  <div id="admin-panel" style="display:none;">
+    <header class="admin-header">
+      <h1>Panel Admin PasarLadang</h1>
+      <nav>
+        <button onclick="tukarTab('produk')">📦 Produk</button>
+        <button onclick="tukarTab('tempahan')">📄 Tempahan</button>
+        <button onclick="tukarTab('berita')">📰 Berita</button>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Tab: Produk -->
+      <section id="tab-produk" class="tab-content">
+        <h2>Senarai Produk</h2>
+        <table id="produk-table">
+          <thead>
+            <tr>
+              <th>Nama</th><th>Harga</th><th>Unit</th><th>Gambar</th><th>Tindakan</th>
+            </tr>
+          </thead>
+          <tbody id="produk-list">
+            <!-- Diisi melalui JavaScript -->
+          </tbody>
+        </table>
+
+        <h3>Tambah Produk Baru</h3>
+        <form id="form-produk">
+          <input type="text" id="nama" placeholder="Nama" required>
+          <input type="number" id="harga" placeholder="Harga" required>
+          <input type="text" id="unit" placeholder="Unit" required>
+          <input type="text" id="gambar" placeholder="Path Gambar" required>
+          <button type="submit">Tambah</button>
+        </form>
+      </section>
+
+      <!-- Tab: Tempahan (Placeholder) -->
+      <section id="tab-tempahan" class="tab-content" style="display:none">
+        <h2>Senarai Tempahan</h2>
+        <a href="senarai-tempahan.html">📦 Lihat Senarai Tempahan</a>
+
+      </section>
+
+      <!-- Tab: Berita -->
+      <section id="tab-berita" class="tab-content" style="display:none">
+        <h2>Urus Berita & Aktiviti</h2>
+        <form id="form-berita">
+          <input type="text" id="tajuk-berita" placeholder="Tajuk" required>
+          <textarea id="kandungan-berita" placeholder="Isi berita" required></textarea>
+          <button type="submit">Hantar Berita</button>
+        </form>
+        <ul id="senarai-berita"></ul>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const produkList = [];
+    const beritaList = [];
+
+    function renderProduk() {
+      const tbody = document.getElementById('produk-list');
+      tbody.innerHTML = '';
+      produkList.forEach((p, i) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${p.nama}</td>
+            <td>RM${p.harga}</td>
+            <td>${p.unit}</td>
+            <td><img src="${p.gambar}" width="50"></td>
+            <td><button onclick="padamProduk(${i})">Padam</button></td>
+          </tr>`;
+      });
+    }
+
+    function padamProduk(index) {
+      produkList.splice(index, 1);
+      renderProduk();
+    }
+
+    document.getElementById('form-produk').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nama = document.getElementById('nama').value;
+      const harga = parseFloat(document.getElementById('harga').value);
+      const unit = document.getElementById('unit').value;
+      const gambar = document.getElementById('gambar').value;
+      produkList.push({ nama, harga, unit, gambar });
+      renderProduk();
+      e.target.reset();
+    });
+
+    function tukarTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      document.getElementById('tab-' + tabId).style.display = 'block';
+    }
+
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const user = document.getElementById('admin-username').value;
+      const pass = document.getElementById('admin-password').value;
+      if (user === 'admin' && pass === 'ladang0725') {
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('admin-panel').style.display = 'block';
+      } else {
+        alert('Nama pengguna atau kata laluan salah.');
+      }
+    });
+
+    document.getElementById('form-berita').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const tajuk = document.getElementById('tajuk-berita').value;
+      const kandungan = document.getElementById('kandungan-berita').value;
+      beritaList.push({ tajuk, kandungan });
+      simpanBerita();
+      renderBerita();
+      e.target.reset();
+    });
+
+    function renderBerita() {
+      const senarai = document.getElementById('senarai-berita');
+      senarai.innerHTML = '';
+      beritaList.forEach((b, i) => {
+        senarai.innerHTML += `<li><strong>${b.tajuk}</strong><br>${b.kandungan}</li>`;
+      });
+    }
+
+    function simpanBerita() {
+      localStorage.setItem('berita', JSON.stringify(beritaList));
+    }
+
+    function muatBerita() {
+      const data = localStorage.getItem('berita');
+      if (data) {
+        const parsed = JSON.parse(data);
+        parsed.forEach(b => beritaList.push(b));
+        renderBerita();
+      }
+    }
+
+    window.onload = function() {
+  muatBerita();
+  muatTempahan();
+};
+    function renderTempahan() {
+  const section = document.getElementById('tab-tempahan');
+  section.innerHTML = `
+    <h2>Senarai Tempahan</h2>
+    <table>
+      <thead>
+        <tr><th>Nama</th><th>Telefon</th><th>Alamat</th><th>Produk</th></tr>
+      </thead>
+      <tbody id="senarai-tempahan"></tbody>
+    </table>`;
+  
+  const tbody = document.getElementById('senarai-tempahan');
+  tempahanList.forEach(t => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${t.nama}</td>
+        <td>${t.telefon}</td>
+        <td>${t.alamat}</td>
+        <td>${t.senaraiProduk}</td>
+      </tr>`;
+  });
+}
+
+function simpanTempahan() {
+  localStorage.setItem('tempahan', JSON.stringify(tempahanList));
+}
+
+function muatTempahan() {
+  const data = localStorage.getItem('tempahan');
+  if (data) {
+    const parsed = JSON.parse(data);
+    parsed.forEach(t => tempahanList.push(t));
+    renderTempahan();
+  }
+}
+
+  </script>
+</body>
+</html>

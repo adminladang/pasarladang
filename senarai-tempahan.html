@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <title>Senarai Tempahan</title>
+  <link rel="stylesheet" href="style-order.css" />
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    .kosong {
+      color: gray;
+      font-style: italic;
+    }
+
+    .total-box {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .btn-padam {
+      background-color: #c0392b;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-padam:hover {
+      background-color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <main class="order-container">
+    <h1>📦 Senarai Tempahan</h1>
+    <div id="senarai"></div>
+
+    <div class="total-box" id="ringkasan"></div>
+
+    <div style="margin-top: 20px;">
+      <a href="index.html">← Kembali ke Laman Utama</a>
+    </div>
+  </main>
+
+  <script>
+    let tempahanList = JSON.parse(localStorage.getItem("tempahan") || "[]");
+    const senaraiDiv = document.getElementById("senarai");
+    const ringkasanDiv = document.getElementById("ringkasan");
+
+    function paparSenarai() {
+      if (tempahanList.length === 0) {
+        senaraiDiv.innerHTML = '<p class="kosong">Tiada tempahan direkodkan.</p>';
+        ringkasanDiv.innerHTML = '';
+        return;
+      }
+
+      let html = `
+        <table>
+          <thead>
+            <tr>
+              <th>Nama</th>
+              <th>Telefon</th>
+              <th>Alamat</th>
+              <th>Produk Ditempah</th>
+              <th>Jumlah (RM)</th>
+              <th>Tindakan</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      let jumlahKeseluruhan = 0;
+
+      tempahanList.forEach((tempahan, index) => {
+        const nilai = anggarJumlah(tempahan.senaraiProduk);
+        jumlahKeseluruhan += nilai;
+
+        html += `
+          <tr>
+            <td>${tempahan.nama}</td>
+            <td>${tempahan.telefon}</td>
+            <td>${tempahan.alamat}</td>
+            <td>${tempahan.senaraiProduk}</td>
+            <td>RM${nilai.toFixed(2)}</td>
+            <td><button class="btn-padam" onclick="padamTempahan(${index})">🗑️ Padam</button></td>
+          </tr>
+        `;
+      });
+
+      html += `</tbody></table>`;
+      senaraiDiv.innerHTML = html;
+
+      ringkasanDiv.innerHTML = `
+        Jumlah Tempahan: ${tempahanList.length}<br>
+        Nilai Keseluruhan: RM${jumlahKeseluruhan.toFixed(2)}
+      `;
+    }
+
+    function anggarJumlah(teks) {
+      const hargaMap = {
+        "Kangkung": 2,
+        "Ayam Kampung": 25,
+        "Cili Merah": 5,
+        "Tomato": 4,
+        "Jagung Manis": 3,
+        "Telur Kampung": 10,
+        "Bayam Merah": 2.5
+      };
+
+      let jumlah = 0;
+      if (!teks) return 0;
+
+      const senarai = teks.split(",");
+      senarai.forEach(item => {
+        const padan = item.trim().match(/(.+?) x(\d+)/);
+        if (padan) {
+          const nama = padan[1].trim();
+          const kuantiti = parseInt(padan[2]);
+          const harga = hargaMap[nama] || 0;
+          jumlah += harga * kuantiti;
+        }
+      });
+      return jumlah;
+    }
+
+    function padamTempahan(index) {
+      if (confirm("Padam tempahan ini?")) {
+        tempahanList.splice(index, 1);
+        localStorage.setItem("tempahan", JSON.stringify(tempahanList));
+        paparSenarai();
+      }
+    }
+
+    // Mula papar
+    paparSenarai();
+  </script>
+</body>
+</html>

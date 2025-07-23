@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tempahan PasarLadang</title>
+  <link rel="stylesheet" href="style-order.css" />
+</head>
+<body class="order-page">
+  <main class="order-container">
+    <h1>Tempahan Hasil Ladang</h1>
+    <p>Sila rujuk katalog di bawah dan isi tempahan anda:</p>
+
+    <!-- Katalog Produk -->
+    <section class="produk-senarai">
+      <h2>📋 Katalog Hasil Ladang</h2>
+      <div id="produk-grid" class="produk-grid"></div>
+    </section>
+
+    <!-- Borang Tempahan -->
+    <form id="order-form" action="https://formsubmit.co/pasarladang@gmail.com" method="POST">
+      <h2>Senarai Produk untuk Tempahan</h2>
+      <table class="jadual-produk">
+        <thead>
+          <tr>
+            <th>Produk</th>
+            <th>Harga</th>
+            <th>Kuantiti</th>
+            <th>Jumlah (RM)</th>
+          </tr>
+        </thead>
+        <tbody id="borang-produk">
+          <!-- Akan diisi melalui JavaScript -->
+        </tbody>
+      </table>
+
+      <p style="text-align:right; font-weight:bold;">
+        Jumlah Keseluruhan: <span id="jumlah-keseluruhan">RM0.00</span>
+      </p>
+
+      <h3>Maklumat Pelanggan</h3>
+      <div class="maklumat-pelanggan">
+  <div class="input-kumpulan">
+    <label for="nama">Nama Penuh</label>
+    <input type="text" id="nama" name="nama" required>
+  </div>
+  <div class="input-kumpulan">
+    <label for="telefon">No Telefon</label>
+    <input type="text" id="telefon" name="telefon" required>
+  </div>
+  <div class="input-kumpulan">
+    <label for="alamat">Alamat Penghantaran</label>
+    <input type="text" id="alamat" name="alamat" required>
+  </div>
+</div>
+
+<div class="butang-container">
+  <a href="https://toyyibpay.com/sample-bayaran" target="_blank" class="butang-bayar">💳 Bayar Sekarang</a>
+</div>
+      <div class="butang-container">
+  <button type="submit" class="butang-hantar">📩 Hantar Tempahan</button>
+</div>
+      <input type="hidden" name="_subject" value="Tempahan Baru dari PasarLadang">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="terima-kasih.html">
+    </form>
+
+    <div style="margin-top: 20px;">
+      <a href="index.html">← Kembali ke Laman Utama</a>
+    </div>
+  </main>
+
+  <!-- SCRIPT -->
+ <script>
+  async function muatProduk() {
+    try {
+      const response = await fetch('produk.json');
+      const produkList = await response.json();
+
+      const katalog = document.getElementById("produk-grid");
+      const borang = document.getElementById("borang-produk");
+
+      produkList.forEach(item => {
+        // Katalog
+        const div = document.createElement("div");
+        div.className = "produk-kad";
+        div.innerHTML = `
+          <img src="${item.gambar}" alt="${item.nama}">
+          <h3>${item.nama}</h3>
+          <p>RM${item.harga} / ${item.unit}</p>
+        `;
+        katalog.appendChild(div);
+
+        // Borang
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${item.nama}</td>
+          <td data-harga="${item.harga}">RM${item.harga} / ${item.unit}</td>
+          <td><input type="number" name="${item.nama}" min="0" value="0" onchange="kiraJumlah()"></td>
+          <td class="jumlah-item">RM0.00</td>
+        `;
+        borang.appendChild(tr);
+      });
+
+      kiraJumlah();
+    } catch (err) {
+      console.error("Gagal muat produk.json:", err);
+      alert("Gagal memuatkan senarai produk.");
+    }
+  }
+
+  function kiraJumlah() {
+    const baris = document.querySelectorAll("#borang-produk tr");
+    let jumlahKeseluruhan = 0;
+
+    baris.forEach(row => {
+      const hargaCell = row.querySelector("td[data-harga]");
+      const harga = parseFloat(hargaCell.getAttribute("data-harga"));
+      const kuantitiInput = row.querySelector("input[type='number']");
+      const kuantiti = parseInt(kuantitiInput.value) || 0;
+      const jumlah = harga * kuantiti;
+
+      row.querySelector(".jumlah-item").innerText = "RM" + jumlah.toFixed(2);
+      jumlahKeseluruhan += jumlah;
+    });
+
+    document.getElementById("jumlah-keseluruhan").innerText = "RM" + jumlahKeseluruhan.toFixed(2);
+  }
+
+  window.onload = muatProduk;
+
+  document.getElementById("order-form").addEventListener("submit", function (event) {
+    const tempahanList = JSON.parse(localStorage.getItem("tempahan") || "[]");
+
+    const nama = document.getElementById("nama").value;
+    const telefon = document.getElementById("telefon").value;
+    const alamat = document.getElementById("alamat").value;
+
+    const baris = document.querySelectorAll("#borang-produk tr");
+    let senaraiProduk = [];
+
+    baris.forEach(row => {
+      const namaProduk = row.cells[0].innerText;
+      const kuantiti = parseInt(row.querySelector("input[type='number']").value) || 0;
+      if (kuantiti > 0) {
+        senaraiProduk.push(`${namaProduk} x${kuantiti}`);
+      }
+    });
+
+    // Halang submit jika tiada produk dipilih
+    if (senaraiProduk.length === 0) {
+      alert("Sila pilih sekurang-kurangnya satu produk untuk ditempah.");
+      event.preventDefault();
+      return;
+    }
+
+    const rekodBaru = {
+      nama,
+      telefon,
+      alamat,
+      senaraiProduk: senaraiProduk.join(", ")
+    };
+
+    tempahanList.push(rekodBaru);
+    localStorage.setItem("tempahan", JSON.stringify(tempahanList));
+  });
+</script>
+</body>
+</html>

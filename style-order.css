@@ -1,0 +1,212 @@
+/* Umum */
+body.order-page {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+main.order-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background: white;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+  border-left: 5px solid #2e7d32;
+  border-right: 5px solid #2e7d32;
+}
+
+h1, h2, h3 {
+  color: #2e7d32;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+p {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Grid Produk */
+.produk-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.produk-kad {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  text-align: center;
+  padding: 15px;
+  transition: transform 0.3s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.produk-kad:hover {
+  transform: translateY(-5px);
+}
+
+.produk-kad img {
+  max-width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.produk-kad h3 {
+  margin-bottom: 5px;
+}
+
+/* Jadual Tempahan */
+.jadual-produk {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.jadual-produk th,
+.jadual-produk td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+.jadual-produk th {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* Input */
+form input[type="text"],
+form input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+/* Butang */
+button,
+.btn-bayar,
+.btn-balik {
+  display: inline-block;
+  background-color: #2e7d32;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  border: none;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+button:hover,
+.btn-bayar:hover,
+.btn-balik:hover {
+  background-color: #256029;
+}
+
+.tengah {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Responsif */
+/* Input dalam Jadual (Kuantiti) */
+.jadual-produk input[type="number"] {
+  width: 70px;
+  padding: 6px;
+  text-align: center;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* Maklumat Pelanggan - Grid Layout */
+.maklumat-pelanggan {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.maklumat-pelanggan input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+
+@media (max-width: 768px) {
+  .produk-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .jadual-produk th, .jadual-produk td {
+    font-size: 14px;
+    padding: 6px;
+  }
+
+  form input {
+    font-size: 14px;
+  }
+
+  button, .btn-bayar, .btn-balik {
+    padding: 10px 18px;
+    font-size: 15px;
+  }
+}.butang-container {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.butang-bayar {
+  background-color: #28a745;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.butang-bayar:hover {
+  background-color: #218838;
+}
+.butang-container {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.butang-hantar {
+  background-color: #007bff;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.butang-hantar:hover {
+  background-color: #0056b3;
+}
+

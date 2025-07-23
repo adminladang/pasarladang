@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin PasarLadang</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f7f7f7; max-width: 600px; margin: auto; }
+    h1 { color: #2e7d32; }
+    input, button { display: block; width: 100%; margin-top: 10px; padding: 10px; font-size: 16px; }
+    button { background: #2e7d32; color: white; border: none; cursor: pointer; }
+    .hidden { display: none; }
+    .produk-list { margin-top: 20px; }
+    .produk-item { background: #fff; padding: 10px; margin-bottom: 10px; border-left: 5px solid #4caf50; }
+    .password-wrapper { position: relative; }
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin Panel - PasarLadang</h1>
+
+  <!-- Login Form -->
+  <div id="loginForm">
+    <input type="email" id="email" placeholder="Email Admin">
+    <div class="password-wrapper">
+      <input type="password" id="password" placeholder="Kata Laluan">
+      <span class="toggle-password" onclick="togglePassword()">👁️</span>
+    </div>
+    <button id="loginBtn">Log Masuk</button>
+  </div>
+
+  <!-- Admin Content -->
+  <div id="adminPanel" class="hidden">
+    <h2>Tambah Produk</h2>
+    <input type="text" id="nama" placeholder="Nama Produk">
+    <input type="number" id="harga" placeholder="Harga">
+    <input type="text" id="unit" placeholder="Unit (cth: kg, ikat)">
+    <input type="text" id="gambar" placeholder="Link Gambar">
+    <button onclick="tambahProduk()">Tambah</button>
+    <button onclick="logout()" style="background:#c62828;">Log Keluar</button>
+
+    <div class="produk-list" id="produkList">
+      <h3>Senarai Produk</h3>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAxsi_pBnvsYgg6GeEWt4EekRvW3D0TEIM",
+      authDomain: "pasarladang-c2eb6.firebaseapp.com",
+      projectId: "pasarladang-c2eb6",
+      storageBucket: "pasarladang-c2eb6.firebasestorage.app",
+      messagingSenderId: "82383938042",
+      appId: "1:82383938042:web:521b7484224c197a360443",
+      measurementId: "G-KJZRXWSH2M"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const loginForm = document.getElementById("loginForm");
+    const adminPanel = document.getElementById("adminPanel");
+
+    document.getElementById("loginBtn").addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => alert("Log masuk berjaya!"))
+        .catch(err => alert("Gagal log masuk: " + err.message));
+    });
+
+    function togglePassword() {
+      const passwordField = document.getElementById("password");
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+      } else {
+        passwordField.type = "password";
+      }
+    }
+
+    function logout() {
+      signOut(auth).then(() => alert("Log keluar."));
+    }
+
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        loginForm.classList.add("hidden");
+        adminPanel.classList.remove("hidden");
+        paparProduk();
+      } else {
+        loginForm.classList.remove("hidden");
+        adminPanel.classList.add("hidden");
+      }
+    });
+
+    async function tambahProduk() {
+      const nama = document.getElementById("nama").value;
+      const harga = parseFloat(document.getElementById("harga").value);
+      const unit = document.getElementById("unit").value;
+      const gambar = document.getElementById("gambar").value;
+
+      await addDoc(collection(db, "products"), { nama, harga, unit, gambar });
+      alert("Produk ditambah!");
+      document.getElementById("nama").value = "";
+      document.getElementById("harga").value = "";
+      document.getElementById("unit").value = "";
+      document.getElementById("gambar").value = "";
+    }
+
+    function paparProduk() {
+      const produkList = document.getElementById("produkList");
+      produkList.innerHTML = "<h3>Senarai Produk</h3>";
+
+      const q = query(collection(db, "products"), orderBy("nama"));
+      onSnapshot(q, (snapshot) => {
+        produkList.innerHTML = "<h3>Senarai Produk</h3>";
+        snapshot.forEach(doc => {
+          const p = doc.data();
+          const div = document.createElement("div");
+          div.className = "produk-item";
+          div.innerHTML = `<strong>${p.nama}</strong> - RM${p.harga} / ${p.unit}<br><small>${p.gambar}</small>`;
+          produkList.appendChild(div);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
